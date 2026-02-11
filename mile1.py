@@ -1,5 +1,6 @@
 # Data Ingestion
 import pandas as pd
+import matplotlib.pyplot as plt
 
 df = pd.read_csv("/datatset_consumer_complaints.csv")
 df.head()
@@ -31,3 +32,26 @@ df['Delayed_Resolution'] = df['Resolution_Days'].apply(
 df['Timely_Flag'] = df['Timely response?'].apply(
     lambda x: 1 if x == "Yes" else 0
 )
+
+# To Show Output
+print("Final Dataset Shape:", df.shape)
+df.head()
+
+# Statistics
+print("Total Complaints:", len(df))
+print("Unique Companies:", df['Company'].nunique())
+print("Average Resolution Days:", df['Resolution_Days'].mean())
+
+# Classification According to Complaint Status
+df['Complaint_Status'] = df['Delayed_Resolution'].apply(
+    lambda x: "High Risk" if x == "Yes" else "Normal"
+)
+df['Complaint_Status'].value_counts()
+
+# To Save Dataset that is Prepared
+df.to_csv("cleaned_consumer_complaints.csv", index=False)
+
+# visualization of normal complains VS Delayed
+df['Delayed_Resolution'].value_counts().plot(kind='bar')
+plt.title("Delayed vs Normal Complaints")
+plt.show()
